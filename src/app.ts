@@ -1,36 +1,18 @@
-import express, { Request, Response } from "express";
-import { Case } from 'MonoMap\src\data\models\case.model.ts';  // Importa el modelo de casos
+import express from "express";
+import { AppRoutes } from "./presentation/routes";
 
- 
-const app = express()
-
- app.get("/", (req:Request,res:Response)=>{
-    res.send("Hola a todos, cuidense de la viruela del mono");
- });
-
- app.listen(3000,()=>{
-    console.log("Server is running on port 3000");
- });
+// Crear la aplicación Express
+const app = express();
 
 
-app.post('/cases', async (req: Request, res: Response) => {
-  try {
-    const { lat, lng, genre, age } = req.body;
+// Middleware para parsear JSON
+app.use(express.json());
 
-    // Crear un nuevo caso usando el modelo
-    const newCase = new Case({
-      lat,
-      lng,
-      genre,
-      age,
-      isSent: false // Inicialmente, el correo no ha sido enviado
-    });
+// Registrar rutas
+app.use("/", AppRoutes.routes);
 
-    // Guardar el caso en la base de datos
-    await newCase.save();
-
-    res.status(201).json(newCase);  // Respuesta con el caso creado
-  } catch (error) {
-    res.status(400).json({ message: 'Error al crear el caso', error });
-  }
+// Iniciar el servidor
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
