@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 
-const caseSchema = new Schema({
+const caseModel = new Schema({
   lat: { type: Number, required: true },
   lng: { type: Number, required: true },
   genre: { type: String, required: true },
@@ -9,4 +9,4 @@ const caseSchema = new Schema({
   creationDate: { type: Date, default: Date.now }
 });
 
-export const Case = model('Case', caseSchema);
+export const Case = model('Case', caseModel);
