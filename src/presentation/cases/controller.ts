@@ -1,9 +1,6 @@
-import { StatusCodes } from "http-status-codes"
-import { EmailService } from "../../domain/services/email.service"
-
 import { Request, Response } from 'express';
 import { Case } from '../../data/models/case.model';
-import { subDays } from 'date-fns';
+
 
 export class CaseController {
   
@@ -34,8 +31,8 @@ export class CaseController {
       // Guardar el caso en la base de datos
       await newCase.save();
 
-      // Aquí puedes llamar a la función para enviar el correo electrónico
-      // await sendEmail(newCase); // Asegúrate de definir la función sendEmail
+      // Aquí podria llamar a la función para enviar el correo electrónico
+      // await sendEmail(newCase); // Define la función sendEmail, sino no sirve perro
 
       res.status(201).json(newCase);  // Respuesta con el caso creado
     } catch (error) {
@@ -51,7 +48,8 @@ export class CaseController {
       const caseItem = await Case.findById(id);
 
       if (!caseItem) {
-        return res.status(404).json({ message: 'Caso no encontrado' });
+        res.status(404).json({ message: 'Caso no encontrado' });
+        return;
       }
 
       res.status(200).json(caseItem);
@@ -73,7 +71,8 @@ export class CaseController {
       );
 
       if (!updatedCase) {
-        return res.status(404).json({ message: 'Caso no encontrado' });
+        res.status(404).json({ message: 'Caso no encontrado' });
+        return;
       }
 
       res.status(200).json(updatedCase);
@@ -90,7 +89,8 @@ export class CaseController {
       const deletedCase = await Case.findByIdAndDelete(id);
 
       if (!deletedCase) {
-        return res.status(404).json({ message: 'Caso no encontrado' });
+        res.status(404).json({ message: 'Caso no encontrado' });
+        return;
       }
 
       res.status(200).json({ message: 'Caso eliminado correctamente' });
