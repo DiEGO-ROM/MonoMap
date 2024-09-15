@@ -1,8 +1,11 @@
-import { envs } from "./envs"
-
-export function generateIncidentEmailTemplate(gender: string, age: number, lat: number, lng: number): string {
-  const mapImageUrl = generateMapboxStaticImageURL(lat, lng)
-  return `
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.generateMapboxStaticImageURL = void 0;
+exports.generateIncidentEmailTemplate = generateIncidentEmailTemplate;
+const envs_1 = require("./envs");
+function generateIncidentEmailTemplate(gender, age, lat, lng) {
+    const mapImageUrl = (0, exports.generateMapboxStaticImageURL)(lat, lng);
+    return `
   <!DOCTYPE html>
   <html lang="es">
   <head>
@@ -77,11 +80,11 @@ export function generateIncidentEmailTemplate(gender: string, age: number, lat: 
   </html>
   `;
 }
-
-export const generateMapboxStaticImageURL = (lat:number, lng: number):string =>{
-  const accessToken = envs.MAPBOX_ACCESS_TOKEN;
-  const zoom = 13;
-  const width = 800;
-  const height = 500;
-  return `https://api.mapbox.com/styles/v1/mapbox/light-v11/static/pin-l-embassy+f74e4e(${lng},${lat})/${lng},${lat},${zoom}/${width}x${height}?access_token=${accessToken}`;
-}
+const generateMapboxStaticImageURL = (lat, lng) => {
+    const accessToken = envs_1.envs.MAPBOX_ACCES_TOKEN;
+    const zoom = 13;
+    const width = 800;
+    const height = 500;
+    return `https://api.mapbox.com/styles/v1/mapbox/light-v11/static/pin-l-embassy+f74e4e(${lng},${lat})/${lng},${lat},${zoom}/${width}x${height}?access_token=${accessToken}`;
+};
+exports.generateMapboxStaticImageURL = generateMapboxStaticImageURL;

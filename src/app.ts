@@ -4,11 +4,15 @@ import { AppRoutes } from "./presentation/routes";
 // Crear la aplicación Express
 const app = express();
 
-
 // Middleware para parsear JSON
 app.use(express.json());
 
-// Registrar rutas
+// Ruta para la raíz
+app.get("/", (req, res) => {
+  res.send("API MonoMap is running");
+});
+
+// Registrar otras rutas
 app.use("/", AppRoutes.routes);
 
 // Iniciar el servidor
