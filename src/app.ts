@@ -1,8 +1,12 @@
 import express from "express";
 import { AppRoutes } from "./presentation/routes";
+import { MongoDatabase } from "./db/connection";
+import { envs } from "./config/envs";
 
 // Crear la aplicación Express
 const app = express();
+
+(async () => await MongoDatabase.connect({mongoUrl: envs.MONGO_URL, dbName: envs.MONGO_DB}))();
 
 // Middleware para parsear JSON
 app.use(express.json());
