@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  incident-api:
+    build: .
+    container_name: case-api
+    environment:
+      PORT: ${PORT}
+      MONGO_URL: ${MONGO_URL_DOCKER}
+      MONGO_DB: ${MONGO_DB}
+      MAILER_ACCESS_TOKEN: ${MAILER_ACCESS_TOKEN}
+      MAILER_SERVICE: ${MAILER_SERVICE}
+      MAILER_EMAIL: ${MAILER_EMAIL}
+      MAPBOX_ACCES_TOKEN: ${MAPBOX_ACCES_TOKEN}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo
+    container_name: mono_mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 12345
+    ports:
+      - "27017:27017"
+    volumes:
+      - mono_mongo_db:/data/db
+
+volumes:
+  mono_mongo_db:
