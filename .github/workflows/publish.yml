@@ -16,12 +16,12 @@ jobs:
               run: docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{secrets.DOCKER_PASSWORD}}"
  
             - name: Build Docker Image
-              run: docker build -t diego-rom/monomap:${{ github.sha }} .
+              run: docker build -t dieromero/monomap:${{ github.sha }} .
  
             - name: Tag Latest
-              run: docker tag diego-rom/monomap:${{ github.sha }} diego-rom/monomap:latest
+              run: docker tag dieromero/monomap:${{ github.sha }} dieromero/monomap:latest
  
             - name: Push Docker Image
               run: |
-                docker push diego-rom/monomap:${{ github.sha }}
-                docker push diego-rom/monomap:latest
+                docker push dieromero/monomap:${{ github.sha }}
+                docker push dieromero/monomap:latest
