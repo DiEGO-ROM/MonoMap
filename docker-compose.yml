@@ -21,7 +21,7 @@ services:
     container_name: mono_mongo
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: 12345
+      MONGO_INITDB_ROOT_PASSWORD: 123456
     ports:
       - "27017:27017"
     volumes:

@@ -7,13 +7,13 @@ interface ConnectionOptions{
 
 export class MongoDatabase{
   static async connect (options: ConnectionOptions){
-    try {
-      await mongoose.connect(options.mongoUrl, {
-        dbName: options.dbName
-      });
-      console.log("Connected to the database");
-    } catch (error) {
-      console.error("Error connecting to the database:", error);
+    try{
+    await mongoose.connect(options.mongoUrl,{
+      dbName:options.dbName
+    })
+    console.log("Connected to the database")
+    }catch(error){
+      console.error(error)
     }
   }
 }

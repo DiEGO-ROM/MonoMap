@@ -1,101 +1,87 @@
-import { Request, Response } from 'express';
-import { Case } from '../../data/models/case.model';
-
+import { Request, Response } from "express"
+import { StatusCodes } from "http-status-codes"
+import { CaseModel }from "../../data/models/case.model"
 
 export class CaseController {
-  
-  // Obtener todos los casos
-  async getCases(req: Request, res: Response): Promise<void> {
-    try {
-      const cases = await Case.find();  // Recuperar todos los casos
-      res.status(200).json(cases);
-    } catch (error) {
-      res.status(500).json({ message: 'Error al recuperar los casos', error });
+  public getAll = async(req: Request, res: Response)=>{
+    try{
+      const cases = await CaseModel.find()
+      res.json(cases).status(StatusCodes.OK)
+    }catch(error){
+      res.json(error).status(StatusCodes.INTERNAL_SERVER_ERROR)
     }
   }
 
-  // Crear un nuevo caso
-  async createCase(req: Request, res: Response): Promise<void> {
-    const { lat, lng, genre, age } = req.body;
+  public deleteCase = async(req: Request, res: Response)=>{
+    try{
+      const {id} = req.params
+      const monoCase = await CaseModel.findById(id)
+      if(!monoCase){
+        res.json("Case not found").status(StatusCodes.NOT_FOUND)
+      }
+      await CaseModel.findByIdAndDelete(id)
+      res.status(StatusCodes.OK).send()
+    }catch(error){
+      res.json(error).status(StatusCodes.INTERNAL_SERVER_ERROR)
+    }
+  }
 
-    try {
-      // Crear un nuevo caso usando el modelo
-      const newCase = new Case({
-        lat,
-        lng,
-        genre,
-        age,
-        isSent: false  // Inicialmente, el correo no ha sido enviado
+  public updateCase = async(req: Request, res: Response)=>{
+    try{
+      const monoCase = req.body
+      const {id} = req.params
+      const oldMonoCase = await CaseModel.findById(id)
+      await CaseModel.findByIdAndUpdate(id, {
+        ...monoCase,
+        creationDate: oldMonoCase!.creationDate,
+        isSent: false,
+      })
+      const updatedCase = await CaseModel.findById(id)
+      res.json(updatedCase).status(StatusCodes.OK)
+    }catch(error){
+      res.json(error).status(StatusCodes.INTERNAL_SERVER_ERROR)
+    }
+  }
+
+  public getoneById = async(req: Request, res: Response)=>{
+    try{
+      const {id} = req.params
+      const monoCase = await CaseModel.findById(id)
+      res.json(monoCase).status(StatusCodes.OK)
+    }catch(error){
+      res.json(error).status(StatusCodes.INTERNAL_SERVER_ERROR)
+    }
+  }
+
+  public getLastWeek = async(req: Request, res: Response)=>{
+    try{
+      const oneWeekAgo = new Date();
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
+
+      const cases = await CaseModel.find({
+      creationDate: { $gte: oneWeekAgo }
       });
-
-      // Guardar el caso en la base de datos
-      await newCase.save();
-
-      // Aquí podria llamar a la función para enviar el correo electrónico
-      // await sendEmail(newCase); // Define la función sendEmail, sino no sirve perro
-
-      res.status(201).json(newCase);  // Respuesta con el caso creado
-    } catch (error) {
-      res.status(400).json({ message: 'Error al crear el caso', error });
+      res.json(cases).status(StatusCodes.OK)
+    }catch(error){
+      res.json(error).status(StatusCodes.INTERNAL_SERVER_ERROR)
     }
   }
 
-  // Obtener un caso por ID
-  async getCaseById(req: Request, res: Response): Promise<void> {
-    const { id } = req.params;
-
-    try {
-      const caseItem = await Case.findById(id);
-
-      if (!caseItem) {
-        res.status(404).json({ message: 'Caso no encontrado' });
-        return;
-      }
-
-      res.status(200).json(caseItem);
-    } catch (error) {
-      res.status(500).json({ message: 'Error al recuperar el caso', error });
+  public createCase = async(req: Request, res: Response)=>{
+    try{
+      const monoCase = req.body
+      const insertionResponse = await CaseModel.create({
+        age: monoCase.age,
+        creationDate: new Date().toISOString(),
+        genre: monoCase.genre,
+        isSent: false,
+        lat: monoCase.lat,
+        lng: monoCase.lng,
+      })
+      res.json(insertionResponse).status(StatusCodes.OK)
+    }catch(error){
+      res.json(error).status(StatusCodes.INTERNAL_SERVER_ERROR)
     }
   }
 
-  // Actualizar un caso
-  async updateCase(req: Request, res: Response): Promise<void> {
-    const { id } = req.params;
-    const { lat, lng, genre, age, isSent } = req.body;
-
-    try {
-      const updatedCase = await Case.findByIdAndUpdate(
-        id,
-        { lat, lng, genre, age, isSent },
-        { new: true }  // Devolver el caso actualizado
-      );
-
-      if (!updatedCase) {
-        res.status(404).json({ message: 'Caso no encontrado' });
-        return;
-      }
-
-      res.status(200).json(updatedCase);
-    } catch (error) {
-      res.status(400).json({ message: 'Error al actualizar el caso', error });
-    }
-  }
-
-  // Eliminar un caso
-  async deleteCase(req: Request, res: Response): Promise<void> {
-    const { id } = req.params;
-
-    try {
-      const deletedCase = await Case.findByIdAndDelete(id);
-
-      if (!deletedCase) {
-        res.status(404).json({ message: 'Caso no encontrado' });
-        return;
-      }
-
-      res.status(200).json({ message: 'Caso eliminado correctamente' });
-    } catch (error) {
-      res.status(500).json({ message: 'Error al eliminar el caso', error });
-    }
-  }
 }

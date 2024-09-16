@@ -1,26 +1,17 @@
-import express from "express";
-import { AppRoutes } from "./presentation/routes";
+import express from "express"
+import { envs } from "./utils/dontenv";
+import AppRouter from "./router/app-router";
 import { MongoDatabase } from "./db/connection";
-import { envs } from "./config/envs";
+import { EmailJob } from "./jobs/email.jobs";
 
-// Crear la aplicación Express
 const app = express();
 
 (async () => await MongoDatabase.connect({mongoUrl: envs.MONGO_URL, dbName: envs.MONGO_DB}))();
+app.use(express.json())
 
-// Middleware para parsear JSON
-app.use(express.json());
+app.use("/", AppRouter.routes)
 
-// Ruta para la raíz
-app.get("/", (req, res) => {
-  res.send("API MonoMap is running");
-});
-
-// Registrar otras rutas
-app.use("/", AppRoutes.routes);
-
-// Iniciar el servidor
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+app.listen(envs.PORT, ()=>{
+  console.log(`Server is running on port ${envs.PORT}`)
+  EmailJob()
+})
