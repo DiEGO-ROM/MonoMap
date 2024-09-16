@@ -81,7 +81,7 @@ function generateIncidentEmailTemplate(gender, age, lat, lng) {
   `;
 }
 const generateMapboxStaticImageURL = (lat, lng) => {
-    const accessToken = dontenv_1.envs.MAPBOX_ACCES_TOKEN;
+    const accessToken = dontenv_1.envs.MAPBOX_ACCESS_TOKEN;
     const zoom = 13;
     const width = 800;
     const height = 500;

@@ -79,7 +79,7 @@ export function generateIncidentEmailTemplate(gender: string, age: number, lat: 
 }
 
 export const generateMapboxStaticImageURL = (lat:number, lng: number):string =>{
-  const accessToken = envs.MAPBOX_ACCES_TOKEN;
+  const accessToken = envs.MAPBOX_ACCESS_TOKEN;
   const zoom = 13;
   const width = 800;
   const height = 500;
